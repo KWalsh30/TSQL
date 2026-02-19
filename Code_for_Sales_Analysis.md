@@ -1,5 +1,6 @@
 # TSQL
 -- TSQL - Step 1 - Clean and Stage the Raw Data
+
 IF OBJECT_ID('Orders_Cleaned', 'U') IS NOT NULL DROP TABLE Orders_Cleaned;
 
 SELECT 
@@ -42,8 +43,11 @@ SELECT
     CASE WHEN COALESCE(Quantity, 0) > 0 THEN COALESCE(Sales, 0) / Quantity ELSE 0 END AS unit_price,
     CASE WHEN COALESCE(Sales, 0) > 0 THEN (COALESCE(Profit, 0) / Sales) * 100 ELSE 0 END AS profit_margin_percent,
     LTRIM(RTRIM(CAST(order_priority AS NVARCHAR(255)))) AS order_priority
+
 INTO Orders_Cleaned 
+
 FROM dbo.Global_Superstore
+
 WHERE Sales IS NOT NULL AND Quantity > 0 AND Order_Date IS NOT NULL;
 
 -- Optimize for downstream joins
